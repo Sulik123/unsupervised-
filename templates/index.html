@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сегментация покупателей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .stats {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .plot {
+            text-align: center;
+            margin: 20px 0;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 200px;
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        hr {
+            margin: 30px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Сегментация покупателей</h1>
+    <div class="stats">
+        Статистика: всего клиентов — <strong>{{ n_clients }}</strong>, количество кластеров — <strong>{{ n_clusters }}</strong>
+    </div>
+
+    <div class="plot">
+        <h2>Визуализация кластеров (PCA)</h2>
+        <img src="data:image/png;base64,{{ plot_base64 }}" alt="График кластеров">
+    </div>
+
+    <hr>
+
+    <h2>Определить группу нового покупателя</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>Recency (дней с последней покупки):</label>
+            <input type="text" name="recency" placeholder="например 15" required>
+        </div>
+        <div class="form-group">
+            <label>Frequency (количество заказов):</label>
+            <input type="text" name="frequency" placeholder="например 8" required>
+        </div>
+        <div class="form-group">
+            <label> Monetary (общая сумма покупок):</label>
+            <input type="text" name="monetary" placeholder="например 3500" required>
+        </div>
+        <button type="submit">Определить группу</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        {{ result|safe }}
+    </div>
+    {% endif %}
+
+    <footer>
+        Модель KMeans (без квадратов) | Признаки: Recency, Frequency, Monetary, AvgOrderValue, LogMonetary, LogFrequency, RecencyScore
+    </footer>
+</div>
+</body>
+</html>
